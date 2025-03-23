@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91f9cb14fb1cd244395e6a77d935a21e, type: 3}
-  m_Name: Gold Ore
+  m_Script: {fileID: 11500000, guid: bb557c32407c4fb6adab33df29ddd554, type: 3}
+  m_Name: Smelter Recipe - Gold Ingot
   m_EditorClassIdentifier: 
-  _itemID: 0
-  _name: Gold Ore
-  _description: TODO
-  _icon: {fileID: 21300000, guid: e80ffc5182547ab4f9d6f62aa69108d1, type: 3}
-  _maxSize: 5
+  _duration: 0
+  _baseSuccessRate: 0

@@ -2,6 +2,7 @@
 using AncientForgeQuest.Inventories;
 using AncientForgeQuest.UI.DesignSystem;
 using UnityEngine;
+
 namespace AncientForgeQuest.UI.Inventories
 {
     public abstract class InventoryView : BindableBehaviour<Inventory>

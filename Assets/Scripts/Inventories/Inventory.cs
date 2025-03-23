@@ -9,7 +9,7 @@ namespace AncientForgeQuest.Inventories
     {
         public InventorySlot[] Slots { get; private set; }
         private readonly int _capacity;
-        
+
         public Inventory(int capacity)
         {
             _capacity = capacity;
@@ -29,7 +29,7 @@ namespace AncientForgeQuest.Inventories
             {
                 foreach (var currentItemSlot in currentItemSlots)
                 {
-                    remainingAmount = AddTo(currentItemSlot, remainingAmount);
+                    remainingAmount = Add(currentItemSlot, remainingAmount);
                     if (remainingAmount <= 0)
                         break;
                 }
@@ -37,7 +37,7 @@ namespace AncientForgeQuest.Inventories
 
             if (remainingAmount <= 0 || !TryGetEmptySlots(out var emptySlots))
                 return remainingAmount;
-            
+
             foreach (var emptySlot in emptySlots)
             {
                 int space = Mathf.Min(remainingAmount, maxSize);
@@ -48,31 +48,56 @@ namespace AncientForgeQuest.Inventories
                 if (remainingAmount <= 0)
                     break;
             }
-            
+
             return remainingAmount;
         }
 
-        public int AddTo(InventorySlot slot, int amount)
+        public int Add(ItemBag itemBag)
+        {
+            return Add(itemBag.Item, itemBag.Amount);
+        }
+
+        public int Add(InventorySlot slot, int amount)
         {
             var maxSize = slot.Item.CurrentValue.MaxSize;
-            
+
             var space = maxSize - slot.Amount.CurrentValue;
             var value = Mathf.Min(amount, space);
             slot.Add(value);
 
             return amount - value;
         }
-        
-        public int AddTo(InventorySlot slot, InventorySlot from)
+
+
+        public int Remove(ItemModel item, int amount)
         {
-            return AddTo(slot, from.Amount.CurrentValue);
+            var remainingAmount = amount;
+
+            if (!TryGetItemSlots(item, out var currentItemSlots))
+                return remainingAmount;
+
+            foreach (var currentItemSlot in currentItemSlots)
+            {
+                remainingAmount = Remove(currentItemSlot, remainingAmount);
+                if (remainingAmount <= 0)
+                    break;
+            }
+
+            return remainingAmount;
         }
         
-        public int Add(ItemBag itemBag)
+        public int Remove(InventorySlot slot, int amount)
         {
-            return Add(itemBag.Item, itemBag.Amount);
+            var value = Mathf.Min(amount, slot.Amount.CurrentValue);
+            slot.Remove(value);
+            if (slot.Amount.CurrentValue <= 0)
+            {
+                slot.Clear();
+            }
+
+            return amount - value;
         }
-        
+
         private bool TryGetItemSlots(ItemModel item, out List<InventorySlot> slots)
         {
             return TryGetSlots(x => x.Item.CurrentValue == item && x.Amount.CurrentValue < item.MaxSize, out slots);

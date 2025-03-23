@@ -13,12 +13,12 @@ namespace AncientForgeQuest.Utility
             canvasGroup.blocksRaycasts = value;
         }
 
-        private static void SetAlpha(this CanvasGroup canvasGroup, bool value)
+        public static void SetAlpha(this CanvasGroup canvasGroup, bool value)
         {
             canvasGroup.alpha = value ? 1f : 0f;
         }
 
-        public static bool TryGetUIElementUnderMouse(out GameObject target)
+        public static bool TryGetUIGameObject(out GameObject target)
         {
             var eventSystem = EventSystem.current;
             PointerEventData pointerEventData = new PointerEventData(eventSystem)
@@ -31,6 +31,12 @@ namespace AncientForgeQuest.Utility
 
             target = results.Count > 0 ? results[0].gameObject : null;
             return target != null;
+        }
+        
+        public static bool TryGetUIComponent<T>(out T target)
+        {
+            target = default;
+            return TryGetUIGameObject(out var gameObject) && gameObject.TryGetComponent(out target);
         }
     }
 }

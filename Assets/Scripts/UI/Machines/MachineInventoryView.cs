@@ -1,22 +1,14 @@
 ﻿using System;
 using AncientForgeQuest.Inventories;
-using AncientForgeQuest.UI.Inventories;
+using AncientForgeQuest.UI.DesignSystem;
+
 namespace AncientForgeQuest.UI.Machines
 {
-    public class MachineInventoryView : InventoryView
+    public class MachineInventoryView : BindableBehaviour<Inventory>
     {
-        private void Start()
-        {
-            var inventory = new Inventory(1);
-            Bind(inventory);
-        }
-
         protected override void OnBind()
         {
-            foreach (var slot in Model.Slots)
-            {
-                CreateSlot(slot);
-            }
+            throw new NotImplementedException();
         }
     }
 }

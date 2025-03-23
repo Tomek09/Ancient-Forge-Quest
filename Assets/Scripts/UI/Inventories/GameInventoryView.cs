@@ -1,5 +1,4 @@
-﻿using System;
-using AncientForgeQuest.Managers;
+﻿using AncientForgeQuest.Managers;
 
 namespace AncientForgeQuest.UI.Inventories
 {
@@ -10,7 +9,6 @@ namespace AncientForgeQuest.UI.Inventories
             var inventory = GameInventoryManager.Instance.Inventory;
             Bind(inventory);
         }
-
         
         protected override void OnBind()
         {
