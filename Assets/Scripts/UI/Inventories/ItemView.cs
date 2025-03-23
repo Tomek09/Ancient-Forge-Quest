@@ -1,15 +1,15 @@
-﻿using System;
-using AncientForgeQuest.Models;
+﻿using AncientForgeQuest.Models;
 using AncientForgeQuest.UI.DesignSystem;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+
 namespace AncientForgeQuest.UI.Inventories
 {
     public class ItemView : BindableBehaviour<ItemModel>
     {
         [Header("Components")]
-        [SerializeField] private Image _icon; 
-        
+        [SerializeField] private Image _icon;
+
         protected override void OnBind()
         {
             if (Model == null)
@@ -24,7 +24,7 @@ namespace AncientForgeQuest.UI.Inventories
 
         private void ToggleIcon(bool value)
         {
-            _icon.SetEnabled(value);
+            _icon.enabled = value;
         }
     }
 }

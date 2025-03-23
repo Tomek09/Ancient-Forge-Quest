@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace AncientForgeQuest.Models
 {
-    [CreateAssetMenu(fileName = "Item Model", menuName = "Models/Item")]
+    [CreateAssetMenu(fileName = "New Item", menuName = "Models/Item")]
     public class ItemModel : ScriptableObject
     {
-        [Header("Settings")]
+        [Header("Values")]
         [SerializeField] private int _itemID;
         [SerializeField] private string _name;
         [SerializeField] private string _description;

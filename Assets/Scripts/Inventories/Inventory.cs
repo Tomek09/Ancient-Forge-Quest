@@ -7,18 +7,16 @@ namespace AncientForgeQuest.Inventories
 {
     public class Inventory : IInventoryContainer
     {
-        private readonly InventorySlot[] _slots;
+        public InventorySlot[] Slots { get; private set; }
         private readonly int _capacity;
-
-        public event System.Action<InventorySlot> OnItemUpdate = delegate { };
-
+        
         public Inventory(int capacity)
         {
             _capacity = capacity;
-            _slots = new InventorySlot[_capacity];
+            Slots = new InventorySlot[_capacity];
             for (int i = 0; i < _capacity; i++)
             {
-                _slots[i] = new InventorySlot();
+                Slots[i] = new InventorySlot(this);
             }
         }
 
@@ -31,51 +29,53 @@ namespace AncientForgeQuest.Inventories
             {
                 foreach (var currentItemSlot in currentItemSlots)
                 {
-                    var space = maxSize - currentItemSlot.Amount;
-                    var value = Mathf.Min(remainingAmount, space);
-                    remainingAmount -= value;
-
-                    currentItemSlot.Add(value);
-                    OnItemUpdate?.Invoke(currentItemSlot);
-
+                    remainingAmount = AddTo(currentItemSlot, remainingAmount);
                     if (remainingAmount <= 0)
                         break;
                 }
             }
 
-            if (remainingAmount > 0 && TryGetEmptySlots(out var emptySlots))
+            if (remainingAmount <= 0 || !TryGetEmptySlots(out var emptySlots))
+                return remainingAmount;
+            
+            foreach (var emptySlot in emptySlots)
             {
-                foreach (var emptySlot in emptySlots)
-                {
-                    int space = Mathf.Min(remainingAmount, maxSize);
-                    remainingAmount -= space;
+                int space = Mathf.Min(remainingAmount, maxSize);
+                remainingAmount -= space;
 
-                    emptySlot.Bind(item, space);
-                    OnItemUpdate?.Invoke(emptySlot);
+                emptySlot.Bind(item, space);
 
-                    if (remainingAmount <= 0)
-                        break;
-                }
+                if (remainingAmount <= 0)
+                    break;
             }
             
             return remainingAmount;
+        }
+
+        public int AddTo(InventorySlot slot, int amount)
+        {
+            var maxSize = slot.Item.CurrentValue.MaxSize;
+            
+            var space = maxSize - slot.Amount.CurrentValue;
+            var value = Mathf.Min(amount, space);
+            slot.Add(value);
+
+            return amount - value;
+        }
+        
+        public int AddTo(InventorySlot slot, InventorySlot from)
+        {
+            return AddTo(slot, from.Amount.CurrentValue);
         }
         
         public int Add(ItemBag itemBag)
         {
             return Add(itemBag.Item, itemBag.Amount);
         }
-
         
-        public void Swap(int from, int to)
-        {
-            Debug.Log("TODO");
-        }
-
-
         private bool TryGetItemSlots(ItemModel item, out List<InventorySlot> slots)
         {
-            return TryGetSlots(x => x.Item == item && x.Amount < item.MaxSize, out slots);
+            return TryGetSlots(x => x.Item.CurrentValue == item && x.Amount.CurrentValue < item.MaxSize, out slots);
         }
 
         private bool TryGetEmptySlots(out List<InventorySlot> slots)
@@ -85,7 +85,7 @@ namespace AncientForgeQuest.Inventories
 
         private bool TryGetSlots(System.Func<InventorySlot, bool> predicate, out List<InventorySlot> slots)
         {
-            slots = _slots
+            slots = Slots
                 .Where(predicate.Invoke)
                 .ToList();
 
