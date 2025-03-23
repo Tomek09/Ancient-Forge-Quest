@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91f9cb14fb1cd244395e6a77d935a21e, type: 3}
+  m_Script: {fileID: 11500000, guid: ed18ac6c3a04484b9d68ef7abbb25729, type: 3}
   m_Name: Lucky Charm
   m_EditorClassIdentifier: 
   _itemID: 16
@@ -17,3 +17,5 @@ MonoBehaviour:
   _description: TODO
   _icon: {fileID: 21300000, guid: 65b7b94d2e6c85144865f52c64cad45f, type: 3}
   _maxSize: 1
+  _bonusType: 0
+  _value: 0.1
