@@ -28,9 +28,9 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: 4d98e9aae792e86458ae0b297ef1f8bc, type: 2}
     AmountRange: {x: 0, y: 1}
     ChanceRate: 1
-  - Item: {fileID: 11400000, guid: 647ec5f56f7631a40974df868f6ec5e0, type: 2}
+  - Item: {fileID: 11400000, guid: a84b1b6711cb9f04987b9e525ad20fd9, type: 2}
     AmountRange: {x: 1, y: 1}
     ChanceRate: 0.25
-  - Item: {fileID: 11400000, guid: 08ebb4ac1b37ba440ae5d53b09ea68d6, type: 2}
+  - Item: {fileID: 11400000, guid: 9f00158fbb9dfde44872349582ea56da, type: 2}
     AmountRange: {x: 1, y: 1}
     ChanceRate: 0.25

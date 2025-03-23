@@ -10,7 +10,7 @@ namespace AncientForgeQuest.Managers
     public class MachineManager : Singleton<MachineManager>
     {
         private readonly Dictionary<MachineModel, MachineInstance> _instances = new Dictionary<MachineModel, MachineInstance>();
-        
+
         public MachineInstance Subscribe(MachineModel model)
         {
             if (_instances.ContainsKey(model))
@@ -31,26 +31,28 @@ namespace AncientForgeQuest.Managers
                 Debug.LogError($"Can't find instance: {model.name}.");
                 return;
             }
-            
+
             instance.InUnlocked.Value = true;
         }
 
         private void Update()
         {
             var deltaTime = Time.deltaTime;
-            
+
             foreach (var machine in _instances.Values)
             {
                 if (!machine.HasRecipe())
                     continue;
-                
+
                 machine.Tick(deltaTime);
 
                 if (!machine.IsCraftingCompleted())
                     continue;
 
-                var resultItem = machine.OnCraftingCompleted();
-                QuestsManager.Instance.Increment(new QuestIncrement(QuestType.Craft, 1, resultItem.ItemID));
+                if (machine.OnCraftingCompleted(out var resultItem))
+                {
+                    QuestsManager.Instance.Increment(new QuestIncrement(QuestType.Craft, 1, resultItem.ItemID));
+                }
             }
         }
     }

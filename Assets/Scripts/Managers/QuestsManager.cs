@@ -15,6 +15,8 @@ namespace AncientForgeQuest.Managers
         
         private readonly Dictionary<QuestType, HashSet<QuestInstance>> _activeQuests = new Dictionary<QuestType, HashSet<QuestInstance>>();
 
+        public HashSet<QuestInstance> ActiveQuests => _activeQuests.Values.SelectMany(x => x).ToHashSet();
+        
         protected override void OnAwake()
         {
             foreach (var quest in _startQuests)

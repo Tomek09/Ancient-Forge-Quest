@@ -4,6 +4,7 @@ using AncientForgeQuest.Managers;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.UI.DesignSystem;
 using AncientForgeQuest.UI.Inventories;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,7 @@ namespace AncientForgeQuest.UI.Machines
         [Header("UI Components")]
         [SerializeField] private InventorySlotView[] _inputs;
         [SerializeField] private InventorySlotView _output;
+        [SerializeField] private ProgressBar _progressBar;
         [SerializeField] private Button _craftButton;
 
         private void OnEnable()
@@ -40,6 +42,7 @@ namespace AncientForgeQuest.UI.Machines
             if (Model == null)
                 return;
 
+            Model.CraftDuration.Subscribe(OnCraftTimeChange).AddTo(_disposables);
             InitializeSlots();
         }
 
@@ -58,6 +61,18 @@ namespace AncientForgeQuest.UI.Machines
         private void OnCraftButton()
         {
             Model.CraftRequest();
+        }
+
+        private void OnCraftTimeChange(TimeSpan timeSpan)
+        {
+            if (Model.CurrentCraftDuration == TimeSpan.Zero)
+            {
+                _progressBar.SetFill(0, true);
+                return;
+            }
+
+            var percentage = (float)(timeSpan.TotalMilliseconds / Model.CurrentCraftDuration.TotalMilliseconds);
+            _progressBar.SetFill(1 - percentage, true);
         }
     }
 }

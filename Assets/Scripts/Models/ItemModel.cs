@@ -36,5 +36,10 @@ namespace AncientForgeQuest.Models
         {
             get => _maxSize;
         }
+
+        public virtual string GetDescription()
+        {
+            return _description;
+        }
     }
 }

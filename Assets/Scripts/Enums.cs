@@ -10,4 +10,10 @@
         InProgress = 0,
         Completed,
     }
+
+    public enum BonusType
+    {
+        IncreasesCraftChance,
+        ReducesCraftTime
+    }
 }

@@ -16,10 +16,12 @@ namespace AncientForgeQuest.Inventories
             Slots = new InventorySlot[Capacity];
             for (int i = 0; i < Capacity; i++)
             {
-                Slots[i] = new InventorySlot(this);
+                var slot = new InventorySlot(this);
+                Slots[i] = slot;
             }
         }
-
+        
+        
         public int Add(ItemModel item, int amount)
         {
             var remainingAmount = amount;

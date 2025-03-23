@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AncientForgeQuest.Instances;
+using AncientForgeQuest.Managers;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.Utility;
 using R3;
@@ -14,12 +15,12 @@ namespace AncientForgeQuest.Machines
         public MachineInventory Inventory { get; private set; }
         private readonly Dictionary<ItemModel, List<RecipeModel>> _recipesByItem = new Dictionary<ItemModel, List<RecipeModel>>();
 
-        public ReactiveProperty<TimeSpan> CraftTime = new ReactiveProperty<TimeSpan>();
+        public ReactiveProperty<TimeSpan> CraftDuration = new ReactiveProperty<TimeSpan>();
         public ReactiveProperty<bool> InUnlocked = new ReactiveProperty<bool>();
+        public TimeSpan CurrentCraftDuration = TimeSpan.Zero;
 
         private RecipeModel _currentRecipe;
-        private bool _autoCraft = true;
-
+        
         public MachineInstance(MachineModel model) : base(model)
         {
             Inventory = new MachineInventory(model.GetInputs() + 1);
@@ -48,7 +49,7 @@ namespace AncientForgeQuest.Machines
         {
             if (!InUnlocked.CurrentValue)
                 return;
-            
+
             if (_currentRecipe)
                 return;
 
@@ -64,7 +65,7 @@ namespace AncientForgeQuest.Machines
             if (_currentRecipe == null)
                 return;
 
-            CraftTime.Value = CraftTime.CurrentValue.DecreaseDeltaTime(deltaTime);
+            CraftDuration.Value = CraftDuration.CurrentValue.DecreaseDeltaTime(deltaTime);
         }
 
         public bool HasRecipe()
@@ -74,27 +75,44 @@ namespace AncientForgeQuest.Machines
 
         public bool IsCraftingCompleted()
         {
-            return CraftTime.CurrentValue.IsCompleted();
+            return CraftDuration.CurrentValue.IsCompleted();
         }
 
         private void OnCraftStarted()
         {
-            CraftTime.Value = TimeSpan.FromSeconds(_currentRecipe.Duration);
+            float duration = _currentRecipe.Duration;
+
+            if (BonusesManager.Instance.TryGetBonus(BonusType.ReducesCraftTime, out var bonusValue))
+            {
+                duration -= bonusValue;
+            }
+            var finalDuration = TimeSpan.FromSeconds(duration);
+
+            CurrentCraftDuration = finalDuration;
+            CraftDuration.Value = finalDuration;
             ConsumeInput(_currentRecipe);
         }
 
-        public ItemModel OnCraftingCompleted()
+        public bool OnCraftingCompleted(out ItemModel resultItem)
         {
-            var item = AddResult();
-
-            if (_autoCraft && IsCraftable(_currentRecipe))
+            resultItem = null;
+            var successRate = _currentRecipe.BaseSuccessRate;
+            if (BonusesManager.Instance.TryGetBonus(BonusType.IncreasesCraftChance, out var bonusValue))
             {
-                OnCraftStarted();
-                return item;
+                successRate += bonusValue / 100f;
+                successRate = Mathf.Clamp01(successRate);
             }
 
+            if (successRate.IsSuccess())
+            {
+                resultItem = AddResult();
+            }
+
+            CurrentCraftDuration = TimeSpan.Zero;
+            CraftDuration.Value = TimeSpan.Zero;
             _currentRecipe = null;
-            return item;
+            
+            return resultItem != null;
         }
 
         private void ConsumeInput(RecipeModel recipeModel)
@@ -129,24 +147,15 @@ namespace AncientForgeQuest.Machines
 
         private bool IsCraftable(out RecipeModel recipe)
         {
-            recipe = null;
-            return TryGetRecipe(out recipe) && IsCraftable(recipe);
-        }
-
-        private bool IsCraftable(RecipeModel recipe)
-        {
             var output = Inventory.OutputSlot;
-            var resultItem = recipe.ResultItem;
+            recipe = null;
 
-            if (!output.IsEmpty() && !output.HasItem(resultItem.Item))
+            if (!output.IsEmpty())
                 return false;
-
-            if (!output.IsEmpty() && output.Amount.CurrentValue + resultItem.Amount > resultItem.Item.MaxSize)
-                return false;
-
-            return IsRecipeValid(recipe);
+            
+            return TryGetRecipe(out recipe) && IsRecipeValid(recipe);
         }
-
+        
         private bool TryGetRecipe(out RecipeModel recipeModel)
         {
             recipeModel = null;

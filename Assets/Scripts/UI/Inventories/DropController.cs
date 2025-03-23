@@ -20,8 +20,6 @@ namespace AncientForgeQuest.UI.Inventories
         {
             if (slot == Model)
                 return 0;
-
-            Debug.Log(Keyboard.current.ctrlKey.ReadValue());
             
             if (Model.IsEmpty())
             {

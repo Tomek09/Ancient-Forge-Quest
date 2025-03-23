@@ -1,4 +1,5 @@
-﻿using AncientForgeQuest.Models;
+﻿using AncientForgeQuest.Managers;
+using AncientForgeQuest.Models;
 using AncientForgeQuest.Quests;
 using R3;
 using UnityEngine;
@@ -31,6 +32,21 @@ namespace AncientForgeQuest.Instances
         public bool CanIncrement(QuestIncrement questIncrement)
         {
             return questIncrement.IntValue == BaseModel.IntValue;
+        }
+        
+        public float GetCompletionProgress()
+        {
+            return Progress.CurrentValue / (float)BaseModel.RequiredValue;
+        }
+
+        public string GetDescription()
+        {
+            if (BaseModel.QuestType == QuestType.Craft && ItemManager.Instance.TryGetItem(BaseModel.IntValue, out var item))
+            {
+                return $"Craft {BaseModel.RequiredValue} {item.Name}";
+            }
+
+            return string.Empty;
         }
     }
 }
