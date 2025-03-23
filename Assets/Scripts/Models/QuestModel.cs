@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AncientForgeQuest.Models
 {
@@ -7,6 +6,7 @@ namespace AncientForgeQuest.Models
     public class QuestModel : Model
     {
         [Header("Components")]
+        [SerializeField] private string _label;
         [SerializeField] private QuestType _questType;
         [SerializeField] private int _intValue;
         [SerializeField] private int _requiredValue;
@@ -14,6 +14,11 @@ namespace AncientForgeQuest.Models
         [Header("Rewards")]
         [SerializeField] private MachineModel _machineReward;
 
+        public string Label
+        {
+            get => _label;
+        }
+        
         public QuestType QuestType
         {
             get => _questType;

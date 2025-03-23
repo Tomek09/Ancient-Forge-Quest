@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12337384f5c849b7928d108e88b92969, type: 3}
-  m_Name: Craft 5 Iron Ingots
+  m_Name: Elemental Quest
   m_EditorClassIdentifier: 
+  _label: Elemental
   _questType: 0
-  _intValue: 6
-  _requiredValue: 5
+  _intValue: 10
+  _requiredValue: 2
+  _machineReward: {fileID: 11400000, guid: 452fdd60f30bf544698fd08178d7fcf7, type: 2}

@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 12337384f5c849b7928d108e88b92969, type: 3}
-  m_Name: Craft 2 Ember Blades
+  m_Name: Smelt Mastery Quest
   m_EditorClassIdentifier: 
+  _label: Smelt Mastery
   _questType: 0
-  _intValue: 10
-  _requiredValue: 2
+  _intValue: 6
+  _requiredValue: 5
+  _machineReward: {fileID: 11400000, guid: 297961334e60da44f817d149e3a94824, type: 2}

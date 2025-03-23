@@ -11,7 +11,7 @@ namespace AncientForgeQuest.Managers
     {
         [Header("Components")]
         [SerializeField] private LootTableModel _startInventory;
-        
+
         public Inventory Inventory { get; private set; }
 
         public ReactiveProperty<InventorySlot> SelectedSlot { get; private set; } = new ReactiveProperty<InventorySlot>();

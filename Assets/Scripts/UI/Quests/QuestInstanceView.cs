@@ -9,7 +9,7 @@ namespace AncientForgeQuest.UI.Quests
     public class QuestInstanceView : BindableBehaviour<QuestInstance>
     {
         [Header("Components")]
-        [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private TMP_Text _label;
         [SerializeField] private TMP_Text _description;
         [SerializeField] private ProgressBar _progressBar;
         private bool _isInitialized;
@@ -19,6 +19,7 @@ namespace AncientForgeQuest.UI.Quests
             if (Model == null)
                 return;
 
+            _label.SetText(Model.BaseModel.Label);
             var description = Model.GetDescription();
             _description.SetText(description);
             Model.Progress.Subscribe(OnProgressChange).AddTo(_disposables);

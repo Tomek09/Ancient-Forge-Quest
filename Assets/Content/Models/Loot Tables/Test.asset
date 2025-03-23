@@ -16,21 +16,3 @@ MonoBehaviour:
   - Item: {fileID: 11400000, guid: c474e115c682aa74ea7317089b2f99b2, type: 2}
     AmountRange: {x: 10, y: 10}
     ChanceRate: 1
-  - Item: {fileID: 11400000, guid: ffea7025cb1d92a4f8e4a3a2652ed520, type: 2}
-    AmountRange: {x: 10, y: 10}
-    ChanceRate: 1
-  - Item: {fileID: 11400000, guid: dd43db14e95e9904b9007a17028491e1, type: 2}
-    AmountRange: {x: 10, y: 10}
-    ChanceRate: 1
-  - Item: {fileID: 11400000, guid: db7ea4b9119767147afddf5491ca6c32, type: 2}
-    AmountRange: {x: 10, y: 10}
-    ChanceRate: 1
-  - Item: {fileID: 11400000, guid: 4d98e9aae792e86458ae0b297ef1f8bc, type: 2}
-    AmountRange: {x: 10, y: 10}
-    ChanceRate: 1
-  - Item: {fileID: 11400000, guid: a84b1b6711cb9f04987b9e525ad20fd9, type: 2}
-    AmountRange: {x: 1, y: 1}
-    ChanceRate: 0.25
-  - Item: {fileID: 11400000, guid: 9f00158fbb9dfde44872349582ea56da, type: 2}
-    AmountRange: {x: 1, y: 1}
-    ChanceRate: 0.25

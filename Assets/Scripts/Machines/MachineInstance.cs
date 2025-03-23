@@ -157,7 +157,7 @@ namespace AncientForgeQuest.Machines
             var successRate = CurrentRecipe.CurrentValue.BaseSuccessRate;
             if (!BonusesManager.Instance.TryGetBonus(BonusType.IncreasesCraftChance, out var bonusValue))
                 return successRate;
-
+            
             successRate += bonusValue / 100f;
             successRate = Mathf.Clamp01(successRate);
 
