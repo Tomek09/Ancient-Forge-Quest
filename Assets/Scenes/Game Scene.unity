@@ -1145,7 +1145,6 @@ MonoBehaviour:
   _startQuests:
   - {fileID: 11400000, guid: d62256e2d376d9b438b48fb8b9057e72, type: 2}
   - {fileID: 11400000, guid: b97622f0cca026a4e85cd76c2f1b1f61, type: 2}
-  - {fileID: 11400000, guid: 5883952ef11e64640ab3246eba61b5f2, type: 2}
 --- !u!1001 &1140352386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1891,11 +1890,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1783775907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 50, y: 50}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1594358853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1952,10 +1951,10 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
+  m_CellSize: {x: 200, y: 200}
   m_Spacing: {x: 5, y: 5}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 9
 --- !u!1001 &1613526066
 PrefabInstance:
   m_ObjectHideFlags: 0

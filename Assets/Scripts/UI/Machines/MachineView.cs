@@ -4,7 +4,9 @@ using AncientForgeQuest.Managers;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.UI.DesignSystem;
 using AncientForgeQuest.UI.Inventories;
+using AncientForgeQuest.Utility;
 using R3;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,10 +18,13 @@ namespace AncientForgeQuest.UI.Machines
         [SerializeField] private MachineModel _modelReference;
         
         [Header("UI Components")]
+        [SerializeField] private CanvasGroup _contentCanvas;
+        [SerializeField] private GameObject _lockedText;
         [SerializeField] private InventorySlotView[] _inputs;
         [SerializeField] private InventorySlotView _output;
         [SerializeField] private ProgressBar _progressBar;
         [SerializeField] private Button _craftButton;
+        [SerializeField] private TMP_Text _successRateText;
 
         private void OnEnable()
         {
@@ -43,6 +48,8 @@ namespace AncientForgeQuest.UI.Machines
                 return;
 
             Model.CraftDuration.Subscribe(OnCraftTimeChange).AddTo(_disposables);
+            Model.InUnlocked.Subscribe(OnUnlockChange).AddTo(_disposables);
+            Model.CurrentRecipe.Subscribe(OnRecipeChange).AddTo(_disposables);
             InitializeSlots();
         }
 
@@ -73,6 +80,24 @@ namespace AncientForgeQuest.UI.Machines
 
             var percentage = (float)(timeSpan.TotalMilliseconds / Model.CurrentCraftDuration.TotalMilliseconds);
             _progressBar.SetFill(1 - percentage, true);
+        }
+
+        private void OnUnlockChange(bool value)
+        {
+            _lockedText.SetActive(!value);
+            _contentCanvas.Toggle(value);
+        }
+
+        private void OnRecipeChange(RecipeModel recipeModel)
+        {
+            if (recipeModel == null)
+            {
+                _successRateText.SetText(string.Empty);
+            }
+
+            var successRate = Model.GetSuccessRate();
+            var result = $"{successRate * 100}%";
+            _successRateText.SetText(result);
         }
     }
 }

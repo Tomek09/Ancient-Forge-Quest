@@ -2,47 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using AncientForgeQuest.Instances;
+using AncientForgeQuest.Inventories;
 using AncientForgeQuest.Managers;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.Utility;
+using NUnit.Framework;
 using R3;
 using UnityEngine;
 
 namespace AncientForgeQuest.Machines
 {
-    public class MachineInstance : Instance<MachineModel>
+    public class MachineInstance : Instance<MachineModel>, IDisposable
     {
+        public readonly ReactiveProperty<TimeSpan> CraftDuration = new ReactiveProperty<TimeSpan>();
+        public readonly ReactiveProperty<bool> InUnlocked = new ReactiveProperty<bool>();
+        public readonly ReactiveProperty<RecipeModel> CurrentRecipe = new ReactiveProperty<RecipeModel>();
         public MachineInventory Inventory { get; private set; }
-        private readonly Dictionary<ItemModel, List<RecipeModel>> _recipesByItem = new Dictionary<ItemModel, List<RecipeModel>>();
-
-        public ReactiveProperty<TimeSpan> CraftDuration = new ReactiveProperty<TimeSpan>();
-        public ReactiveProperty<bool> InUnlocked = new ReactiveProperty<bool>();
         public TimeSpan CurrentCraftDuration = TimeSpan.Zero;
 
-        private RecipeModel _currentRecipe;
-        
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
+        private readonly Dictionary<ItemModel, List<RecipeModel>> _recipesByItem;
+        private RecipeModel _previousRecipe;
+
+        public bool IsActive { get; private set; }
+
         public MachineInstance(MachineModel model) : base(model)
         {
-            Inventory = new MachineInventory(model.GetInputs() + 1);
             InUnlocked.Value = model.IsUnlocked;
-            CacheRecipes();
+            Inventory = new MachineInventory(model.GetInputs() + 1);
+            _recipesByItem = model.CatchRecipes();
+            var slots = Inventory.Slots;
+            foreach (var inputSlot in slots)
+            {
+                inputSlot.OnInventorySlotChanged.Subscribe(_ => OnInputSlotChanged()).AddTo(_disposables);
+            }
         }
 
-        private void CacheRecipes()
+        public void Dispose()
         {
-            var recipes = BaseModel.Recipes;
-            foreach (var recipe in recipes)
-            {
-                foreach (var requiredItem in recipe.RequiredItems)
-                {
-                    if (!_recipesByItem.ContainsKey(requiredItem.Item))
-                    {
-                        _recipesByItem[requiredItem.Item] = new List<RecipeModel>();
-                    }
-
-                    _recipesByItem[requiredItem.Item].Add(recipe);
-                }
-            }
+            _disposables?.Dispose();
         }
 
         public void CraftRequest()
@@ -50,27 +48,21 @@ namespace AncientForgeQuest.Machines
             if (!InUnlocked.CurrentValue)
                 return;
 
-            if (_currentRecipe)
+            if (IsActive)
                 return;
 
-            if (!IsCraftable(out var recipe))
+            if (CurrentRecipe.CurrentValue == null)
                 return;
 
-            _currentRecipe = recipe;
             OnCraftStarted();
         }
 
         public void Tick(float deltaTime)
         {
-            if (_currentRecipe == null)
+            if (!IsActive)
                 return;
 
             CraftDuration.Value = CraftDuration.CurrentValue.DecreaseDeltaTime(deltaTime);
-        }
-
-        public bool HasRecipe()
-        {
-            return _currentRecipe != null;
         }
 
         public bool IsCraftingCompleted()
@@ -80,45 +72,32 @@ namespace AncientForgeQuest.Machines
 
         private void OnCraftStarted()
         {
-            float duration = _currentRecipe.Duration;
-
-            if (BonusesManager.Instance.TryGetBonus(BonusType.ReducesCraftTime, out var bonusValue))
-            {
-                duration -= bonusValue;
-            }
-            var finalDuration = TimeSpan.FromSeconds(duration);
-
-            CurrentCraftDuration = finalDuration;
-            CraftDuration.Value = finalDuration;
-            ConsumeInput(_currentRecipe);
+            IsActive = true;
+            SetTimer();
+            ConsumeInput();
         }
 
         public bool OnCraftingCompleted(out ItemModel resultItem)
         {
             resultItem = null;
-            var successRate = _currentRecipe.BaseSuccessRate;
-            if (BonusesManager.Instance.TryGetBonus(BonusType.IncreasesCraftChance, out var bonusValue))
-            {
-                successRate += bonusValue / 100f;
-                successRate = Mathf.Clamp01(successRate);
-            }
 
+            var successRate = GetSuccessRate();
             if (successRate.IsSuccess())
             {
                 resultItem = AddResult();
             }
 
-            CurrentCraftDuration = TimeSpan.Zero;
-            CraftDuration.Value = TimeSpan.Zero;
-            _currentRecipe = null;
-            
+            ResetTimer();
+            CurrentRecipe.Value = GetRecipe();
+            IsActive = false;
+
             return resultItem != null;
         }
 
-        private void ConsumeInput(RecipeModel recipeModel)
+        private void ConsumeInput()
         {
             var inputSlots = Inventory.InputSlots;
-            var requiredItems = recipeModel.RequiredItems;
+            var requiredItems = CurrentRecipe.CurrentValue.RequiredItems;
             foreach (var slot in inputSlots)
             {
                 if (slot.IsEmpty())
@@ -129,10 +108,37 @@ namespace AncientForgeQuest.Machines
             }
         }
 
+        private void ResetTimer()
+        {
+            CurrentCraftDuration = TimeSpan.Zero;
+            CraftDuration.Value = TimeSpan.Zero;
+        }
+
+        private void SetTimer()
+        {
+            float duration = CurrentRecipe.Value.Duration;
+            if (BonusesManager.Instance.TryGetBonus(BonusType.ReducesCraftTime, out var bonusValue))
+            {
+                duration -= bonusValue;
+            }
+            var finalDuration = TimeSpan.FromSeconds(duration);
+
+            CurrentCraftDuration = finalDuration;
+            CraftDuration.Value = finalDuration;
+        }
+
+        private void OnInputSlotChanged()
+        {
+            if (IsActive)
+                return;
+
+            CurrentRecipe.Value = GetRecipe();
+        }
+
         private ItemModel AddResult()
         {
             var output = Inventory.OutputSlot;
-            var result = _currentRecipe.ResultItem;
+            var result = CurrentRecipe.CurrentValue.ResultItem;
             if (!output.HasItem(result.Item))
             {
                 output.Bind(result.Item, result.Amount);
@@ -145,75 +151,97 @@ namespace AncientForgeQuest.Machines
             return result.Item;
         }
 
-        private bool IsCraftable(out RecipeModel recipe)
-        {
-            var output = Inventory.OutputSlot;
-            recipe = null;
 
-            if (!output.IsEmpty())
-                return false;
-            
-            return TryGetRecipe(out recipe) && IsRecipeValid(recipe);
+        public float GetSuccessRate()
+        {
+            var successRate = CurrentRecipe.CurrentValue.BaseSuccessRate;
+            if (!BonusesManager.Instance.TryGetBonus(BonusType.IncreasesCraftChance, out var bonusValue))
+                return successRate;
+
+            successRate += bonusValue / 100f;
+            successRate = Mathf.Clamp01(successRate);
+
+            return successRate;
         }
-        
-        private bool TryGetRecipe(out RecipeModel recipeModel)
-        {
-            recipeModel = null;
-            var inputSlots = Inventory.InputSlots;
-            var possibleRecipes = new HashSet<RecipeModel>();
 
-            foreach (var slot in inputSlots)
+
+        private RecipeModel GetRecipe()
+        {
+            var currentItems = GetCurrentItems();
+            var possibleRecipes = GetPossibleRecipes(currentItems);
+
+            var recipe = GetValidRecipe(currentItems, possibleRecipes);
+
+            if (recipe == null)
+                return null;
+
+            var output = Inventory.OutputSlot;
+            var resultItem = recipe.ResultItem;
+
+            if (!output.IsEmpty() && !output.HasItem(resultItem.Item))
+                return null;
+
+            if (!output.IsEmpty() && output.Amount.CurrentValue + resultItem.Amount > resultItem.Item.MaxSize)
+                return null;
+
+            return recipe;
+        }
+
+        private Dictionary<ItemModel, int> GetCurrentItems()
+        {
+            var currentItems = new Dictionary<ItemModel, int>();
+            foreach (var slot in Inventory.InputSlots)
             {
                 if (slot.IsEmpty())
-                    return false;
+                    continue;
+
+                var item = slot.Item.CurrentValue;
+                currentItems.TryAdd(item, 0);
+
+                currentItems[item] += slot.Amount.CurrentValue;
+            }
+
+            return currentItems;
+        }
+
+        private List<RecipeModel> GetPossibleRecipes(Dictionary<ItemModel, int> currentItems)
+        {
+            var possibleRecipes = new List<RecipeModel>();
+
+            foreach (var slot in Inventory.InputSlots)
+            {
+                if (slot.IsEmpty())
+                    continue;
 
                 if (!_recipesByItem.TryGetValue(slot.Item.CurrentValue, out var recipes))
                     continue;
 
-                foreach (var recipe in recipes)
-                {
-                    possibleRecipes.Add(recipe);
-                }
+                possibleRecipes.AddRange(recipes);
             }
 
-            var currentItems = new Dictionary<ItemModel, int>();
-            foreach (var slot in inputSlots)
-            {
-                currentItems.TryAdd(slot.Item.CurrentValue, 0);
-                currentItems[slot.Item.CurrentValue] += slot.Amount.CurrentValue;
-            }
-
-            recipeModel = possibleRecipes.FirstOrDefault(recipe => IsRecipeValid(recipe, currentItems));
-            return recipeModel != null;
+            return possibleRecipes;
         }
 
-        private bool IsRecipeValid(RecipeModel recipeModel)
+        private RecipeModel GetValidRecipe(Dictionary<ItemModel, int> currentItems, List<RecipeModel> possibleRecipes)
         {
-            var currentItems = new Dictionary<ItemModel, int>();
-            var inputSlots = Inventory.InputSlots;
-            foreach (var slot in inputSlots)
+            foreach (var recipe in possibleRecipes)
             {
-                if (slot.IsEmpty())
-                    continue;
+                bool isValid = true;
 
-                currentItems.TryAdd(slot.Item.CurrentValue, 0);
-                currentItems[slot.Item.CurrentValue] += slot.Amount.CurrentValue;
-            }
-
-            return IsRecipeValid(recipeModel, currentItems);
-        }
-
-        private bool IsRecipeValid(RecipeModel recipeModel, Dictionary<ItemModel, int> currentItems)
-        {
-            foreach (var required in recipeModel.RequiredItems)
-            {
-                if (!currentItems.TryGetValue(required.Item, out var amount) || amount < required.Amount)
+                foreach (var required in recipe.RequiredItems)
                 {
-                    return false;
+                    if (currentItems.TryGetValue(required.Item, out var amount) && amount >= required.Amount)
+                        continue;
+
+                    isValid = false;
+                    break;
                 }
+
+                if (isValid)
+                    return recipe;
             }
 
-            return true;
+            return null;
         }
     }
 }

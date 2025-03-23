@@ -22,11 +22,6 @@ namespace AncientForgeQuest.Models
             get => _name;
         }
 
-        public string Description
-        {
-            get => _description;
-        }
-
         public Sprite Icon
         {
             get => _icon;
@@ -36,7 +31,7 @@ namespace AncientForgeQuest.Models
         {
             get => _maxSize;
         }
-
+        
         public virtual string GetDescription()
         {
             return _description;

@@ -43,7 +43,7 @@ namespace AncientForgeQuest.UI.Inventories
         {
             _tooltipContent = itemModel == null 
                 ? new TooltipContent() 
-                : new TooltipContent(itemModel.Name, itemModel.Description);
+                : new TooltipContent(itemModel.Name, itemModel.GetDescription());
         }
 
         public TooltipContent GetContent() => _tooltipContent;

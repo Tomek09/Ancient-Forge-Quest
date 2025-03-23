@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Enchanter Machine
   m_EditorClassIdentifier: 
   _recipes:
-  - {fileID: 11400000, guid: 536c9304d776a4f4599dadc10d21c4b6, type: 2}
-  _isUnlocked: 0
+  - {fileID: 11400000, guid: 6b290709f270d9c4986ed9f73d59219b, type: 2}
+  - {fileID: 11400000, guid: 324a471bbd55ce64fbfabf7dfd499f0c, type: 2}
+  _isUnlocked: 1

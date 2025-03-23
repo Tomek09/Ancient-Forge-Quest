@@ -8,6 +8,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2330247738259807098, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4191803029972562117, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_Name
       value: Game Inventory Slot View
@@ -38,11 +62,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4343180599873395066, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4343180599873395066, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4343180599873395066, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_LocalPosition.x
@@ -91,6 +115,10 @@ PrefabInstance:
     - target: {fileID: 4343180599873395066, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532154860270619200, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      propertyPath: m_fontSize
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

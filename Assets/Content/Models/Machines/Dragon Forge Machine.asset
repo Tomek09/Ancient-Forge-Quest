@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Dragon Forge Machine
   m_EditorClassIdentifier: 
   _recipes:
-  - {fileID: 11400000, guid: 536c9304d776a4f4599dadc10d21c4b6, type: 2}
+  - {fileID: 11400000, guid: 3055050314b8bbb4a9107f6aa5067b9a, type: 2}
+  - {fileID: 11400000, guid: ae34eb5641813c148a14872008d48cbb, type: 2}
   _isUnlocked: 0

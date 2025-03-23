@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Rune Carver Machine
   m_EditorClassIdentifier: 
   _recipes:
-  - {fileID: 11400000, guid: 536c9304d776a4f4599dadc10d21c4b6, type: 2}
+  - {fileID: 11400000, guid: 667066e7e93724740a2e89289cdca56b, type: 2}
+  - {fileID: 11400000, guid: d0b69af02a16d7343b3a5f6cb2f501be, type: 2}
   _isUnlocked: 0

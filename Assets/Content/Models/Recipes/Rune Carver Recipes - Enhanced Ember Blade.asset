@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb557c32407c4fb6adab33df29ddd554, type: 3}
+  m_Name: Rune Carver Recipes - Enhanced Ember Blade
+  m_EditorClassIdentifier: 
+  _requiredItems:
+  - Item: {fileID: 11400000, guid: 3dbca7f5abeebaf42baebeb2cf40dbcc, type: 2}
+    Amount: 1
+  - Item: {fileID: 11400000, guid: db7ea4b9119767147afddf5491ca6c32, type: 2}
+    Amount: 1
+  _resultItem:
+    Item: {fileID: 11400000, guid: 20c73c38ae3723e4bb4362aa476b7155, type: 2}
+    Amount: 1
+  _duration: 6
+  _baseSuccessRate: 0.75

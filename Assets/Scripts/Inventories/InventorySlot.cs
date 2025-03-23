@@ -11,6 +11,7 @@ namespace AncientForgeQuest.Inventories
 
         public ReactiveProperty<ItemModel> Item = new ReactiveProperty<ItemModel>();
         public ReactiveProperty<int> Amount = new ReactiveProperty<int>();
+        public ReactiveCommand OnInventorySlotChanged = new ReactiveCommand();
         public Inventory Inventory { get; private set; }
 
         public InventorySlot(Inventory inventory)
@@ -29,18 +30,23 @@ namespace AncientForgeQuest.Inventories
         {
             Item.Value = item;
             Amount.Value = amount;
+
+            OnInventorySlotChanged?.Execute(default);
         }
         
         public void Bind(InventorySlot slot)
         {
             Item.Value = slot.Item.CurrentValue;
             Amount.Value = slot.Amount.CurrentValue;
+            OnInventorySlotChanged?.Execute(default);
         }
 
         public void Clear()
         {
             Item.Value = null;
             Amount.Value = 0;
+            
+            OnInventorySlotChanged?.Execute(default);
         }
 
         public void Add(int value)
@@ -56,6 +62,7 @@ namespace AncientForgeQuest.Inventories
         public void SetAmount(int value)
         {
             Amount.Value = value;
+            OnInventorySlotChanged?.Execute(default);
         }
         
 
@@ -81,7 +88,9 @@ namespace AncientForgeQuest.Inventories
 
         public string GetAmountText()
         {
-            return Amount.CurrentValue <= 0 ? string.Empty : string.Format(AmountFormat, Amount);
+            return Amount.CurrentValue <= 0 || Item.CurrentValue.MaxSize <= 1 
+                ? string.Empty 
+                : string.Format(AmountFormat, Amount);
         }
     }
 }

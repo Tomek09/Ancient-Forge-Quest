@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AncientForgeQuest.Inventories;
+﻿using AncientForgeQuest.Inventories;
 using AncientForgeQuest.Inventories.Interfaces;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.Utility;
@@ -21,7 +19,7 @@ namespace AncientForgeQuest.Managers
 
         protected override void OnAwake()
         {
-            Inventory = new Inventory(25);
+            Inventory = new Inventory(27);
             var bags = _startInventory.GetItemBags();
             Inventory.Add(bags);
         }

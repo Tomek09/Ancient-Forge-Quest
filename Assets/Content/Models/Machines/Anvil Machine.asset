@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Anvil Machine
   m_EditorClassIdentifier: 
   _recipes:
-  - {fileID: 11400000, guid: 536c9304d776a4f4599dadc10d21c4b6, type: 2}
   - {fileID: 11400000, guid: 597400a049e0e1c4ea54326e09274057, type: 2}
-  _requirements: 0
+  - {fileID: 11400000, guid: 536c9304d776a4f4599dadc10d21c4b6, type: 2}
+  _isUnlocked: 1

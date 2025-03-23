@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AncientForgeQuest.Machines;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.Quests;
@@ -39,11 +40,8 @@ namespace AncientForgeQuest.Managers
         {
             var deltaTime = Time.deltaTime;
 
-            foreach (var machine in _instances.Values)
+            foreach (var machine in _instances.Values.Where(machine => machine.IsActive))
             {
-                if (!machine.HasRecipe())
-                    continue;
-
                 machine.Tick(deltaTime);
 
                 if (!machine.IsCraftingCompleted())
