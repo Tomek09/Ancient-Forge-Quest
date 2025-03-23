@@ -1,6 +1,7 @@
 ﻿using AncientForgeQuest.Inventories;
 using AncientForgeQuest.Inventories.Interfaces;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace AncientForgeQuest.UI.Inventories
 {
@@ -20,6 +21,8 @@ namespace AncientForgeQuest.UI.Inventories
             if (slot == Model)
                 return 0;
 
+            Debug.Log(Keyboard.current.ctrlKey.ReadValue());
+            
             if (Model.IsEmpty())
             {
                 Model.Bind(slot);
@@ -36,12 +39,13 @@ namespace AncientForgeQuest.UI.Inventories
                 return remainingAmount;
             }
             
+            
             var tempItem = slot.Item.CurrentValue;
             var tempAmount = slot.Amount.CurrentValue;
             slot.Bind(Model);
             Model.Bind(tempItem, tempAmount);
             
-            return tempAmount;
+            return 0;
         }
     }
 }

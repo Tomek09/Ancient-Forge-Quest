@@ -8,13 +8,13 @@ namespace AncientForgeQuest.Inventories
     public class Inventory : IInventoryContainer
     {
         public InventorySlot[] Slots { get; private set; }
-        private readonly int _capacity;
+        public int Capacity { get; private set; }
 
         public Inventory(int capacity)
         {
-            _capacity = capacity;
-            Slots = new InventorySlot[_capacity];
-            for (int i = 0; i < _capacity; i++)
+            Capacity = capacity;
+            Slots = new InventorySlot[Capacity];
+            for (int i = 0; i < Capacity; i++)
             {
                 Slots[i] = new InventorySlot(this);
             }
@@ -52,9 +52,17 @@ namespace AncientForgeQuest.Inventories
             return remainingAmount;
         }
 
-        public int Add(ItemBag itemBag)
+        public void Add(ItemBag itemBag)
         {
-            return Add(itemBag.Item, itemBag.Amount);
+            Add(itemBag.Item, itemBag.Amount);
+        }
+
+        public void Add(List<ItemBag> itemBags)
+        {
+            foreach (var bag in itemBags)
+            {
+                Add(bag);
+            }
         }
 
         public int Add(InventorySlot slot, int amount)
@@ -85,7 +93,7 @@ namespace AncientForgeQuest.Inventories
 
             return remainingAmount;
         }
-        
+
         public int Remove(InventorySlot slot, int amount)
         {
             var value = Mathf.Min(amount, slot.Amount.CurrentValue);

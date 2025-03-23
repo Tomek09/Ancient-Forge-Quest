@@ -1,6 +1,7 @@
 ﻿using AncientForgeQuest.Models;
 namespace AncientForgeQuest.Inventories
 {
+    [System.Serializable]
     public struct ItemBag
     {
         public ItemModel Item;

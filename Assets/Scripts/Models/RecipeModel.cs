@@ -8,7 +8,7 @@ namespace AncientForgeQuest.Models
     {
         [Header("Values")]
         [SerializeField] private ItemBag[] _requiredItems;
-        [SerializeField] private ItemBag[] _resultItems;
+        [SerializeField] private ItemBag _resultItem;
         [SerializeField, Tooltip("Enter duration in seconds.")] private int _duration;
         [SerializeField, Range(0, 1)] private float _baseSuccessRate;
         
@@ -17,9 +17,9 @@ namespace AncientForgeQuest.Models
             get => _requiredItems;
         }
 
-        public ItemBag[] ResultItems
+        public ItemBag ResultItem
         {
-            get => _resultItems;
+            get => _resultItem;
         }
 
         public float Duration

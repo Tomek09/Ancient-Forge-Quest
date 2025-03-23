@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4191803029972562117, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_Name
-      value: Machine Output Slot View Variant
+      value: Machine Input Slot View Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4343180599873395066, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       propertyPath: m_Pivot.x
@@ -98,14 +98,17 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4191803029972562117, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -8962798624513383726}
+      addedObject: {fileID: -1075185412201128847}
+    - targetCorrespondingSourceObject: {fileID: 4191803029972562117, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7950557179330890741}
   m_SourcePrefab: {fileID: 100100000, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
 --- !u!1 &4650820051258191258 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4191803029972562117, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
   m_PrefabInstance: {fileID: 8838119206406430047}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-8962798624513383726
+--- !u!114 &-1075185412201128847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,4 +120,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2636d15a5d7b41e18c356a974e62bec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _canvasGroup: {fileID: 0}
+  _canvasGroup: {fileID: 9093212500895101534}
+--- !u!114 &-7950557179330890741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4650820051258191258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e13a4482452c425ebf7e091d17b7264e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!225 &9093212500895101534 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 330691320263208705, guid: aa380c3341834d042b42ec0d3ae83205, type: 3}
+  m_PrefabInstance: {fileID: 8838119206406430047}
+  m_PrefabAsset: {fileID: 0}

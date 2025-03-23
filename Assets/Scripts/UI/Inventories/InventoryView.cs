@@ -11,19 +11,10 @@ namespace AncientForgeQuest.UI.Inventories
         [SerializeField] private InventorySlotView _slotPrefab;
         [SerializeField] private Transform _slotParent;
 
-        protected Dictionary<InventorySlot, InventorySlotView> _slotByView = new Dictionary<InventorySlot, InventorySlotView>();
-
         protected void CreateSlot(InventorySlot slot)
         {
-            if (_slotByView.ContainsKey(slot))
-            {
-                Debug.LogError($"Slot already exists! ({slot})");
-                return;
-            }
-            
             var slotView = Instantiate(_slotPrefab, _slotParent);
             slotView.Bind(slot);
-            _slotByView.Add(slot, slotView);
         }
     }
 }

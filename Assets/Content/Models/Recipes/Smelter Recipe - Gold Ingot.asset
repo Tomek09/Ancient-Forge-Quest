@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb557c32407c4fb6adab33df29ddd554, type: 3}
   m_Name: Smelter Recipe - Gold Ingot
   m_EditorClassIdentifier: 
-  _duration: 0
-  _baseSuccessRate: 0
+  _requiredItems:
+  - Item: {fileID: 11400000, guid: ffea7025cb1d92a4f8e4a3a2652ed520, type: 2}
+    Amount: 1
+  _resultItem:
+    Item: {fileID: 11400000, guid: da06a65de11db0d4095fca4457366e38, type: 2}
+    Amount: 1
+  _duration: 1
+  _baseSuccessRate: 1

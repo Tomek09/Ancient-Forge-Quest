@@ -71,7 +71,12 @@ namespace AncientForgeQuest.Inventories
 
         public bool HasItem(InventorySlot slot)
         {
-            return Item.CurrentValue == slot.Item.CurrentValue;
+            return HasItem(slot.Item.CurrentValue);
+        }
+        
+        public bool HasItem(ItemModel itemModel)
+        {
+            return Item.CurrentValue == itemModel;
         }
 
         public string GetAmountText()

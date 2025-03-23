@@ -6,8 +6,6 @@ namespace AncientForgeQuest.Inventories
     {
         int Add(ItemModel item, int amount);
         
-        int Add(ItemBag itemBag);
-
         //void Remove(InventorySlot slot);
     }
 }

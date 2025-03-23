@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb557c32407c4fb6adab33df29ddd554, type: 3}
   m_Name: Smelter Recipe - Iron Ingot
   m_EditorClassIdentifier: 
-  _duration: 0
-  _baseSuccessRate: 0
+  _requiredItems:
+  - Item: {fileID: 11400000, guid: c474e115c682aa74ea7317089b2f99b2, type: 2}
+    Amount: 1
+  _resultItem:
+    Item: {fileID: 11400000, guid: 946c8d83560d7ef419b2039845a3c989, type: 2}
+    Amount: 1
+  _duration: 1
+  _baseSuccessRate: 1
