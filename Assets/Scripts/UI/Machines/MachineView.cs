@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace AncientForgeQuest.UI.Machines
 {
-    public class MachineView : BindableBehaviour<MachineController>
+    public class MachineView : BindableBehaviour<MachineInstance>
     {
         [Header("Components")]
         [SerializeField] private MachineModel _modelReference;

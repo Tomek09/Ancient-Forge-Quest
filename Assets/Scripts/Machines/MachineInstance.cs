@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AncientForgeQuest.Instances;
 using AncientForgeQuest.Models;
 using AncientForgeQuest.Utility;
 using R3;
@@ -8,26 +9,27 @@ using UnityEngine;
 
 namespace AncientForgeQuest.Machines
 {
-    public class MachineController
+    public class MachineInstance : Instance<MachineModel>
     {
         public MachineInventory Inventory { get; private set; }
-        private readonly MachineModel _model;
         private readonly Dictionary<ItemModel, List<RecipeModel>> _recipesByItem = new Dictionary<ItemModel, List<RecipeModel>>();
 
         public ReactiveProperty<TimeSpan> CraftTime = new ReactiveProperty<TimeSpan>();
+        public ReactiveProperty<bool> InUnlocked = new ReactiveProperty<bool>();
+
         private RecipeModel _currentRecipe;
         private bool _autoCraft = true;
 
-        public MachineController(MachineModel model)
+        public MachineInstance(MachineModel model) : base(model)
         {
-            _model = model;
             Inventory = new MachineInventory(model.GetInputs() + 1);
+            InUnlocked.Value = model.IsUnlocked;
             CacheRecipes();
         }
 
         private void CacheRecipes()
         {
-            var recipes = _model.Recipes;
+            var recipes = BaseModel.Recipes;
             foreach (var recipe in recipes)
             {
                 foreach (var requiredItem in recipe.RequiredItems)
@@ -44,6 +46,9 @@ namespace AncientForgeQuest.Machines
 
         public void CraftRequest()
         {
+            if (!InUnlocked.CurrentValue)
+                return;
+            
             if (_currentRecipe)
                 return;
 
@@ -60,10 +65,16 @@ namespace AncientForgeQuest.Machines
                 return;
 
             CraftTime.Value = CraftTime.CurrentValue.DecreaseDeltaTime(deltaTime);
-            if (!CraftTime.CurrentValue.IsCompleted())
-                return;
+        }
 
-            OnCraftingCompleted();
+        public bool HasRecipe()
+        {
+            return _currentRecipe != null;
+        }
+
+        public bool IsCraftingCompleted()
+        {
+            return CraftTime.CurrentValue.IsCompleted();
         }
 
         private void OnCraftStarted()
@@ -72,17 +83,18 @@ namespace AncientForgeQuest.Machines
             ConsumeInput(_currentRecipe);
         }
 
-        private void OnCraftingCompleted()
+        public ItemModel OnCraftingCompleted()
         {
-            AddResult();
+            var item = AddResult();
 
             if (_autoCraft && IsCraftable(_currentRecipe))
             {
                 OnCraftStarted();
-                return;
+                return item;
             }
 
             _currentRecipe = null;
+            return item;
         }
 
         private void ConsumeInput(RecipeModel recipeModel)
@@ -99,7 +111,7 @@ namespace AncientForgeQuest.Machines
             }
         }
 
-        private void AddResult()
+        private ItemModel AddResult()
         {
             var output = Inventory.OutputSlot;
             var result = _currentRecipe.ResultItem;
@@ -111,9 +123,10 @@ namespace AncientForgeQuest.Machines
             {
                 output.Inventory.Add(output, result.Amount);
             }
+
+            return result.Item;
         }
-        
-        
+
         private bool IsCraftable(out RecipeModel recipe)
         {
             recipe = null;
@@ -127,13 +140,13 @@ namespace AncientForgeQuest.Machines
 
             if (!output.IsEmpty() && !output.HasItem(resultItem.Item))
                 return false;
-            
+
             if (!output.IsEmpty() && output.Amount.CurrentValue + resultItem.Amount > resultItem.Item.MaxSize)
                 return false;
 
             return IsRecipeValid(recipe);
         }
-        
+
         private bool TryGetRecipe(out RecipeModel recipeModel)
         {
             recipeModel = null;
@@ -173,11 +186,11 @@ namespace AncientForgeQuest.Machines
             {
                 if (slot.IsEmpty())
                     continue;
-                
+
                 currentItems.TryAdd(slot.Item.CurrentValue, 0);
                 currentItems[slot.Item.CurrentValue] += slot.Amount.CurrentValue;
             }
-            
+
             return IsRecipeValid(recipeModel, currentItems);
         }
 

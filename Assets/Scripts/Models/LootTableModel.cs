@@ -7,7 +7,7 @@ using UnityEngine;
 namespace AncientForgeQuest.Models
 {
     [CreateAssetMenu(fileName = "New Loot Table", menuName = "Models/Loot Table")]
-    public class LootTableModel : ScriptableObject
+    public class LootTableModel : Model
     {
         [System.Serializable]
         private class LootTable

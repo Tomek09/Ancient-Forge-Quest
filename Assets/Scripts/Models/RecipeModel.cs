@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AncientForgeQuest.Models
 {
     [CreateAssetMenu(fileName = "New Recipe", menuName = "Models/Recipe")]
-    public class RecipeModel : ScriptableObject
+    public class RecipeModel : Model
     {
         [Header("Values")]
         [SerializeField] private ItemBag[] _requiredItems;

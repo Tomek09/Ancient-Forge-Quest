@@ -3,7 +3,7 @@ using UnityEngine;
 namespace AncientForgeQuest.Models
 {
     [CreateAssetMenu(fileName = "New Item", menuName = "Models/Item")]
-    public class ItemModel : ScriptableObject
+    public class ItemModel : Model
     {
         [Header("Values")]
         [SerializeField] private int _itemID;
